@@ -14,7 +14,7 @@ from pandasai.helpers.openai_info import get_openai_callback
 from pandasai.middlewares import StreamlitMiddleware
 
 from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, UPLOAD_FILE_MESSAGE
-from utils_streamlit import streamlit_hack_remove_top_space
+from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
 # ------------------------------- UI
 
@@ -22,6 +22,7 @@ st.set_page_config(page_title= HEADER_STR, layout="wide")
 st.title(HEADER_STR)
 
 streamlit_hack_remove_top_space()
+streanlit_hide_main_menu()
 
 tab_main, tab_setting, tab_debug = st.tabs(["Request", "Settings", "Debug"])
 
