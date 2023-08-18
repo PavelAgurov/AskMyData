@@ -31,7 +31,8 @@ with tab_main:
     col1 , col2 = st.columns([6, 1])
     uploaded_file = col1.file_uploader(
         UPLOAD_FILE_MESSAGE,
-        type="csv"
+        type=["csv", "xls", "xslx"],
+        accept_multiple_files= False
     )
     load_titanik_msg = col2.markdown('Load default <a href="https://www.linkedin.com/pulse/what-i-learned-analyzing-famous-titanic-dateset-murilo-gustineli/">Titanik</a> data', unsafe_allow_html=True)
     load_titanik_button = col2.button('Load')
@@ -69,10 +70,15 @@ llm = OpenAI(api_token= LLM_OPENAI_API_KEY)
 # ------------------------------- App
 
 # ask to upload file
-if st.session_state.data is None:
-    if uploaded_file is not None:
+if uploaded_file is not None:
+    file_name : str = uploaded_file.name
+    if file_name.endswith('.csv'):
         df = pd.read_csv(uploaded_file)
-        st.session_state.data = df
+    elif file_name.endswith('.xlsx') or file_name.endswith('.xls'):
+        df = pd.read_excel(uploaded_file)
+    else:
+        df = None
+    st.session_state.data = df
 
 if load_titanik_button:
     df = pd.read_csv('./data_examples/titanic.csv')
