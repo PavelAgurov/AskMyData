@@ -27,11 +27,14 @@ tab_main, tab_setting, tab_debug = st.tabs(["Request", "Settings", "Debug"])
 
 with tab_main:
     header_container = st.container()
-    uploaded_file = st.file_uploader(
+    col1 , col2 = st.columns([6, 1])
+    uploaded_file = col1.file_uploader(
         UPLOAD_FILE_MESSAGE,
         type="csv"
     )
-    data_header = st.expander(label="First 5 rows").empty()
+    load_titanik_msg = col2.markdown('Load default <a href="https://www.linkedin.com/pulse/what-i-learned-analyzing-famous-titanic-dateset-murilo-gustineli/">Titanik</a> data', unsafe_allow_html=True)
+    load_titanik_button = col2.button('Load')
+    data_header = st.expander(label="First 5 rows", expanded=True).empty()
     question_container = st.empty()
     question = question_container.text_input("Enter your question and press Enter:", value="", type="default")
     result_container = st.empty()
@@ -70,6 +73,10 @@ if st.session_state.data is None:
         df = pd.read_csv(uploaded_file)
         st.session_state.data = df
 
+if load_titanik_button:
+    df = pd.read_csv('./data_examples/titanic.csv')
+    st.session_state.data = df
+
 # no data yet
 if st.session_state.data is None:
     st.stop()
@@ -91,8 +98,6 @@ try:
                         "middlewares": [StreamlitMiddleware()]
                     })
         result = smart_df.chat(question)
-
-        debug_container.markdown(type(result))
 
         if isinstance(result, SmartDataframe):
             result_container.dataframe(result, use_container_width= True, hide_index= True)
