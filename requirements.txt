@@ -4,3 +4,4 @@ streamlit
 tiktoken
 sentence-transformers
 pandasai
+beautifulsoup4
