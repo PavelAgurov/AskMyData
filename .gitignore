@@ -1,0 +1,6 @@
+/.streamlit
+/.langchain.db
+/.__pycache__
+/__pycache__
+/cache
+/pandasai.log
