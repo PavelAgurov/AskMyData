@@ -1,12 +1,11 @@
 """
     Main
 """
-# pylint: disable=C0301,C0103,C0303,C0304,C0305
+# pylint: disable=C0301,C0103,C0303,C0304,C0305,C0411
 
 import os
 import pandas as pd
 import traceback
-import matplotlib.pyplot as plt
 from PIL import Image
 
 import streamlit as st
@@ -143,7 +142,7 @@ try:
     smart_df = SmartDataframe(df, config={
                     "llm": llm, 
                     "conversational": cb_conversational, 
-                    "enable_cache": False,
+                    "enable_cache": True,
                     "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
 #                    "enforce_privacy" : cb_enforce_privacy
                     }, 
