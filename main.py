@@ -151,8 +151,9 @@ try:
                     
                 )
 
-    with get_openai_callback() as cb:
-        result = smart_df.chat(question)
+    with st.spinner(text="In progress..."):
+        with get_openai_callback() as cb:
+            result = smart_df.chat(question)
     st.session_state.tokens += cb.total_tokens
     show_used_tokens()
 
