@@ -5,3 +5,4 @@ tiktoken
 sentence-transformers
 pandasai
 beautifulsoup4
+matplotlib
