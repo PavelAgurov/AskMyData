@@ -17,7 +17,8 @@ from pandasai.helpers.openai_info import get_openai_callback
 from pandasai.middlewares import StreamlitMiddleware, ChartsMiddleware
 from pandasai.helpers.logger import Logger
 
-from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, UPLOAD_FILE_MESSAGE, LOAD_TITANIK_DATA
+from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, \
+                    UPLOAD_FILE_MESSAGE, LOAD_TITANIK_DATA, QUESTION_EXAMPLES
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
 MODEL_NAME = "gpt-3.5-turbo" # gpt-3.5-turbo-16k
@@ -30,6 +31,7 @@ def show_used_tokens():
     token_count_container.markdown(f'Used {st.session_state.tokens} tokens')
 
 def init_graph_folder():
+    """Create ouput folder if doesn't exist"""
     if not os.path.isdir(OUTPUT_GPAPH_FOLDER):
         os.makedirs(OUTPUT_GPAPH_FOLDER)
 
@@ -44,7 +46,7 @@ st.set_page_config(page_title= HEADER_STR, layout="wide")
 st.title(HEADER_STR)
 
 streamlit_hack_remove_top_space()
-#streanlit_hide_main_menu()
+streanlit_hide_main_menu()
 
 tab_main, tab_setting, tab_debug = st.tabs(["Request", "Settings", "Debug"])
 
@@ -60,6 +62,7 @@ with tab_main:
     load_titanik_button = col2.button('Load')
     loading_status = st.empty()
     data_header = st.expander(label="First 5 rows", expanded=True).empty()
+    question_container = st.expander(label="Example of questions...").empty().markdown(QUESTION_EXAMPLES)
     question_container = st.empty()
     question = question_container.text_input("Enter your question and press Enter:", value="", type="default")
     result_container = st.empty()
@@ -69,6 +72,7 @@ with tab_setting:
     gpt_key_info = st.info(GPT_KEY_USAGE_WARNING)
     open_api_key = st.text_input("OpenAPI Key: ", "", key="open_api_key")
     cb_conversational = st.checkbox(label="Conversational mode", value=True)
+#    cb_enforce_privacy = st.checkbox(label="Do not send data to the API (will send only headers)", value=False)
 
 #with tab_debug:
 
@@ -140,7 +144,8 @@ try:
                     "llm": llm, 
                     "conversational": cb_conversational, 
                     "enable_cache": False,
-                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()]
+                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
+#                    "enforce_privacy" : cb_enforce_privacy
                     }, 
                     logger= logger,
                     
