@@ -21,12 +21,17 @@ from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, UPLOAD_FILE
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
 MODEL_NAME = "gpt-3.5-turbo" # gpt-3.5-turbo-16k
-OUTPUT_GPAPH_FILE = './exports/charts/temp_chart.png'
+OUTPUT_GPAPH_FOLDER = './exports/charts/'
+OUTPUT_GPAPH_FILE   = './exports/charts/temp_chart.png'
 # ------------------------------- Functions
 
 def show_used_tokens():
     """Show token counter"""
     token_count_container.markdown(f'Used {st.session_state.tokens} tokens')
+
+def init_graph_folder():
+    if not os.path.exists(OUTPUT_GPAPH_FOLDER):
+        os.makedirs(OUTPUT_GPAPH_FOLDER)
 
 def clear_graph_file():
     """Remove png file if exists"""
@@ -93,6 +98,7 @@ llm = OpenAI(api_token= LLM_OPENAI_API_KEY, model = MODEL_NAME, temperature=0, m
 # ------------------------------- App
 
 show_used_tokens()
+init_graph_folder()
 clear_graph_file()
 
 # ask to upload file
