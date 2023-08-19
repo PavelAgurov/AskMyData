@@ -30,7 +30,7 @@ def show_used_tokens():
     token_count_container.markdown(f'Used {st.session_state.tokens} tokens')
 
 def init_graph_folder():
-    if not os.path.exists(OUTPUT_GPAPH_FOLDER):
+    if not os.path.isdir(OUTPUT_GPAPH_FOLDER):
         os.makedirs(OUTPUT_GPAPH_FOLDER)
 
 def clear_graph_file():
