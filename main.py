@@ -17,7 +17,7 @@ from pandasai.middlewares import StreamlitMiddleware, ChartsMiddleware
 from pandasai.helpers.logger import Logger
 
 from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, \
-                    UPLOAD_FILE_MESSAGE, LOAD_TITANIK_DATA, QUESTION_EXAMPLES
+                    UPLOAD_FILE_MESSAGE, WHAT_IS_TITANIK_DATA, QUESTION_EXAMPLES
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
 MODEL_NAME = "gpt-3.5-turbo" # gpt-3.5-turbo-16k
@@ -57,8 +57,8 @@ with tab_main:
         type=["csv", "xls", "xslx"],
         accept_multiple_files= False
     )
-    load_titanik_msg = col2.markdown(LOAD_TITANIK_DATA, unsafe_allow_html=True)
-    load_titanik_button = col2.button('Load')
+    load_titanik_button = col2.button('Load Titanik data')
+    load_titanik_msg = col2.markdown(WHAT_IS_TITANIK_DATA, unsafe_allow_html=True)
     loading_status = st.empty()
     data_header = st.expander(label="First 5 rows", expanded=True).empty()
     question_container = st.expander(label="Example of questions...").empty().markdown(QUESTION_EXAMPLES)
@@ -141,9 +141,9 @@ logger = Logger(verbose=True)
 try:
     smart_df = SmartDataframe(df, config={
                     "llm": llm, 
-                    "conversational": cb_conversational, 
-                    "enable_cache": True,
-                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
+#                    "conversational": cb_conversational, 
+#                    "enable_cache": True,
+#                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
 #                    "enforce_privacy" : cb_enforce_privacy
                     }, 
                     logger= logger,

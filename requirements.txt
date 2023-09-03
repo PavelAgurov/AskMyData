@@ -3,6 +3,6 @@ openai
 streamlit
 tiktoken
 sentence-transformers
-pandasai
+git+https://github.com/PavelAgurov/pandas-ai.git
 beautifulsoup4
 matplotlib

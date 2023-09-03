@@ -14,7 +14,7 @@ GPT_KEY_USAGE_WARNING  = "Enter your Gpt key and press Enter. Your key is only u
 
 UPLOAD_FILE_MESSAGE = "Choose a data file (Csv)."
 
-LOAD_TITANIK_DATA = 'Load default <a href="https://www.linkedin.com/pulse/what-i-learned-analyzing-famous-titanic-dateset-murilo-gustineli/">Titanik data</a>'
+WHAT_IS_TITANIK_DATA = 'What is <a href="https://www.linkedin.com/pulse/what-i-learned-analyzing-famous-titanic-dateset-murilo-gustineli/">Titanik data</a>'
 
 QUESTION_EXAMPLES = """
 - How many ...?
