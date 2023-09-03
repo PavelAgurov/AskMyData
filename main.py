@@ -141,9 +141,9 @@ logger = Logger(verbose=True)
 try:
     smart_df = SmartDataframe(df, config={
                     "llm": llm, 
-#                    "conversational": cb_conversational, 
-#                    "enable_cache": True,
-#                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
+                    "conversational": cb_conversational,
+                    "enable_cache": False,
+                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
 #                    "enforce_privacy" : cb_enforce_privacy
                     }, 
                     logger= logger,
