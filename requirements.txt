@@ -2,7 +2,6 @@ langchain
 openai
 streamlit
 tiktoken
-sentence-transformers
-git+https://github.com/PavelAgurov/pandas-ai.git
+pandasai
 beautifulsoup4
 matplotlib

@@ -142,7 +142,7 @@ try:
     smart_df = SmartDataframe(df, config={
                     "llm": llm, 
                     "conversational": cb_conversational,
-                    "enable_cache": False,
+                    "enable_cache": True,
                     "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
 #                    "enforce_privacy" : cb_enforce_privacy
                     }, 
