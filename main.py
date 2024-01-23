@@ -13,16 +13,15 @@ import streamlit as st
 from pandasai.llm.openai import OpenAI
 from pandasai import SmartDataframe
 from pandasai.helpers.openai_info import get_openai_callback
-from pandasai.middlewares import StreamlitMiddleware, ChartsMiddleware
 from pandasai.helpers.logger import Logger
 
-from strings import HEADER_STR, HOW_IT_WORKS, GPT_KEY_USAGE_WARNING, \
-                    UPLOAD_FILE_MESSAGE, WHAT_IS_TITANIK_DATA, QUESTION_EXAMPLES
+from strings import  WHAT_IS_TITANIK_DATA, QUESTION_EXAMPLES
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
 MODEL_NAME = "gpt-3.5-turbo" # gpt-3.5-turbo-16k
 OUTPUT_GPAPH_FOLDER = './exports/charts/'
 OUTPUT_GPAPH_FILE   = './exports/charts/temp_chart.png'
+
 # ------------------------------- Functions
 
 def show_used_tokens():
@@ -41,6 +40,7 @@ def clear_graph_file():
 
 # ------------------------------- UI
 
+HEADER_STR = "Ask Your Data POC"
 st.set_page_config(page_title= HEADER_STR, layout="wide")
 st.title(HEADER_STR)
 
@@ -50,38 +50,41 @@ streanlit_hide_main_menu()
 tab_main, tab_setting, tab_debug = st.tabs(["Request", "Settings", "Debug"])
 
 with tab_main:
-    header_container = st.container()
-    col1 , col2 = st.columns([6, 1])
-    uploaded_file = col1.file_uploader(
-        UPLOAD_FILE_MESSAGE,
+    header_container = st.container().markdown("Upload your file Csv or Excel and ask questions.", unsafe_allow_html=True)
+    col11 , col21 = st.columns([6, 1])
+
+    file_uploader_container = col11.container(border=True)
+    uploaded_file = file_uploader_container.file_uploader(
+        "Choose a data file (Csv).",
         type=["csv", "xls", "xslx"],
         accept_multiple_files= False
     )
-    load_titanik_button = col2.button('Load Titanik data')
-    load_titanik_msg = col2.markdown(WHAT_IS_TITANIK_DATA, unsafe_allow_html=True)
+    default_data_container = col21.container(border=True)
+    default_data_container.markdown('Load data example:')
+    load_titanik_button = default_data_container.button('Load Titanik data')
+    default_data_container.markdown(WHAT_IS_TITANIK_DATA, unsafe_allow_html=True)
+
     loading_status = st.empty()
     data_header = st.expander(label="First 5 rows", expanded=True).empty()
-    question_container = st.expander(label="Example of questions...").empty().markdown(QUESTION_EXAMPLES)
-    question_container = st.empty()
-    question = question_container.text_input("Enter your question and press Enter:", value="", type="default")
+    st.expander(label="Example of questions...").empty().markdown(QUESTION_EXAMPLES)
+    st.empty()
+    
+    question = st.text_input("Your question:", value="", type="default")
+    
     result_container = st.empty()
     debug_container = st.container()
 
 with tab_setting:
-    gpt_key_info = st.info(GPT_KEY_USAGE_WARNING)
+    gpt_key_info = st.info("Enter your Gpt key and press Enter. Your key is only used in your browser. If you refresh the page - enter the key again.")
     open_api_key = st.text_input("OpenAPI Key: ", "", key="open_api_key")
     cb_conversational = st.checkbox(label="Conversational mode", value=True)
 #    cb_enforce_privacy = st.checkbox(label="Do not send data to the API (will send only headers)", value=False)
-
-#with tab_debug:
 
 with st.sidebar:
     token_count_container = st.empty()
     result_type = st.empty()
     error_log = st.expander(label="Error log").empty()
     trace_log = st.expander(label="Trace log").empty()
-
-header_container.markdown(HOW_IT_WORKS, unsafe_allow_html=True)
 
 # ------------------------------- Session
 if 'data' not in st.session_state:
@@ -92,10 +95,14 @@ if 'tokens' not in st.session_state:
 # ------------------------------- LLM
 
 if open_api_key:
-    LLM_OPENAI_API_KEY = open_api_key
+    os.environ["OPENAI_API_KEY"] = open_api_key
 else:
-    LLM_OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+    all_secrets = {s[0]:s[1] for s in st.secrets.items()}
+    openai_secrets = all_secrets.get('open_api_openai')
+    if openai_secrets:
+        os.environ["OPENAI_API_KEY"] = openai_secrets.get('OPENAI_API_KEY')
 
+LLM_OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 llm = OpenAI(api_token= LLM_OPENAI_API_KEY, model = MODEL_NAME, temperature=0, max_tokens=1000)
 
 # ------------------------------- App
@@ -103,6 +110,12 @@ llm = OpenAI(api_token= LLM_OPENAI_API_KEY, model = MODEL_NAME, temperature=0, m
 show_used_tokens()
 init_graph_folder()
 clear_graph_file()
+
+# load default data
+if load_titanik_button:
+    df = pd.read_csv('./data_examples/titanic.csv')
+    st.session_state.data = df
+    st.stop()
 
 # ask to upload file
 if uploaded_file is not None:
@@ -114,26 +127,24 @@ if uploaded_file is not None:
     else:
         df = None
     st.session_state.data = df
-
-if load_titanik_button:
-    df = pd.read_csv('./data_examples/titanic.csv')
-    st.session_state.data = df
+    st.stop()
 
 # no data yet
 if st.session_state.data is None:
     loading_status.markdown('Data is not loaded yet')
-    result_container.markdown('')
+    result_container.markdown('Error: data was not loaded. Load data from Excel/Csv or data example.')
     debug_container.markdown('')
     result_type.markdown('')
     trace_log.markdown('')
     st.stop()
 
 df = st.session_state.data
-loading_status.markdown(f'Loaded {df.shape} data.')
+loading_status.markdown(f'Loaded {df.shape} rows.')
 data_header.dataframe(df.head(), use_container_width=True, hide_index=True)
 
 # we have data, but no question yet
 if not question:
+    result_container.markdown('Enter you question and click Enter')
     st.stop()
 
 # we have all - can run it
@@ -143,7 +154,6 @@ try:
                     "llm": llm, 
                     "conversational": cb_conversational,
                     "enable_cache": True,
-                    "middlewares": [StreamlitMiddleware(), ChartsMiddleware()],
 #                    "enforce_privacy" : cb_enforce_privacy
                     }, 
                     logger= logger,
