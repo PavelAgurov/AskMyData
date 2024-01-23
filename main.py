@@ -115,7 +115,6 @@ clear_graph_file()
 if load_titanik_button:
     df = pd.read_csv('./data_examples/titanic.csv')
     st.session_state.data = df
-    st.stop()
 
 # ask to upload file
 if uploaded_file is not None:
@@ -127,7 +126,6 @@ if uploaded_file is not None:
     else:
         df = None
     st.session_state.data = df
-    st.stop()
 
 # no data yet
 if st.session_state.data is None:

@@ -10,5 +10,8 @@ QUESTION_EXAMPLES = """
 - How many ...?
 - Who is... most?
 - What is average of...?
+- Give me all data where...
 - Plot the histogram of ...
+
+If you have clear names for the columns, you don't have to use the exact column names, just ask questions in your native language.
 """
