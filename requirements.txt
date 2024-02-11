@@ -3,5 +3,4 @@ openai
 streamlit
 tiktoken
 pandasai
-beautifulsoup4
 matplotlib
