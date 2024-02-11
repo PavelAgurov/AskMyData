@@ -49,7 +49,7 @@ def streamlit_hack_remove_top_space():
 
 def streanlit_hide_main_menu():
 
-    if st.get_option('browser.serverAddress') == 'localhost':
+    if st.secrets.has_key('ALLOW_MAIN_MEMU'):
         return
 
     hide_streamlit_style = """

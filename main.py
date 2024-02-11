@@ -79,8 +79,6 @@ st.title(HEADER_STR)
 streamlit_hack_remove_top_space()
 streanlit_hide_main_menu()
 
-st.markdown(st.get_option('browser.serverAddress'))
-
 tab_main, tab_setting, tab_debug = st.tabs(["Request", "Settings", "Debug"])
 
 with tab_main:
