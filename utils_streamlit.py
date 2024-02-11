@@ -48,6 +48,10 @@ def streamlit_hack_remove_top_space():
         """, unsafe_allow_html=True)
 
 def streanlit_hide_main_menu():
+
+    if st.get_option('browser.serverAddress') == 'localhost':
+        return
+
     hide_streamlit_style = """
             <style>
             [data-testid="stToolbar"] {visibility: hidden !important;}

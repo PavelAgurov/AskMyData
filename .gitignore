@@ -4,3 +4,5 @@
 /__pycache__
 /cache
 /pandasai.log
+/.exports_charts$$
+/source.code-workspace
