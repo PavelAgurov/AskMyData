@@ -34,9 +34,9 @@ if 'tokens' not in st.session_state:
 
 # ------------------------------- Functions
 
-def show_used_tokens():
+def show_used_tokens(currently_used = 0):
     """Show token counter"""
-    token_count_container.markdown(f'Used {st.session_state.tokens} tokens')
+    token_count_container.markdown(f'Used {currently_used} tokens. Total used {st.session_state.tokens} tokens.')
 
 def init_graph_folder():
     """Create ouput folder if doesn't exist"""
@@ -216,9 +216,9 @@ try:
         with get_openai_callback() as cb:
             result = smart_df.chat(question)
     st.session_state.tokens += cb.total_tokens
-    show_used_tokens()
+    show_used_tokens(cb.total_tokens)
 
-    result_type.markdown(type(result))
+    result_type.markdown(f"Result type: {type(result).__name__}")
 
     if isinstance(result, (SmartDataframe, pd.DataFrame, pd.Series)):
         result_container.dataframe(result, use_container_width= True, hide_index= True)
