@@ -14,7 +14,6 @@ from pandasai.llm.openai import OpenAI
 from pandasai import SmartDataframe, SmartDatalake
 from pandasai.responses import StreamlitResponse
 from pandasai.helpers.openai_info import get_openai_callback
-from pandasai.helpers.logger import Logger
 
 from strings import  WHAT_IS_TITANIK_DATA, QUESTION_EXAMPLES
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
@@ -198,7 +197,7 @@ if not question:
     st.stop()
 
 # we have all - can run it
-logger = Logger(verbose=True)
+#logger = Logger(verbose=True)
 try:
     smart_df = SmartDatalake(st.session_state.data, config={
                     "llm": llm, 
@@ -206,10 +205,12 @@ try:
                     "enable_cache": True,
                     "save_charts_path": OUTPUT_GPAPH_FOLDER,
                     "save_charts": True,                   
-                    "response_parser": StreamlitResponse 
+                    "response_parser": StreamlitResponse,
+                    "save_log": True,
+                    "verbose": True,
+                    "custom_whitelisted_dependencies" : ["faker"]
 #                    "enforce_privacy" : cb_enforce_privacy
-                    }, 
-                    logger= logger,
+                    } 
                 )
 
     with st.spinner(text="In progress..."):
@@ -237,8 +238,8 @@ except Exception as error: # pylint: disable=W0718,W0702
     error_log.markdown(f'Error: {error}. Track: {traceback.format_exc()}')
     result_container.markdown("Sorry, I can't process your question. It's still POC. I hope this problem will be fixed soon.")
 
-if logger.logs:
-    trace_log.text('\n'.join([log_item['msg'] for log_item in logger.logs]))
+if smart_df.logger.logs:
+    trace_log.text('\n'.join([log_item['msg'] for log_item in smart_df.logger.logs]))
 else:
     trace_log.markdown('No logs yet')
 

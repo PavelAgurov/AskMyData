@@ -12,6 +12,7 @@ QUESTION_EXAMPLES = """
 - What is average of...?
 - Give me all data where...
 - Plot the histogram of ...
+- Generate me 10 synthetic rows based on provided examples using Faker library
 
 If you have clear names for the columns, you don't have to use the exact column names, just ask questions in your native language.
 """
