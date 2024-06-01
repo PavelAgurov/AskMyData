@@ -1,7 +1,9 @@
-langchain
 openai
 streamlit
 tiktoken
 pandasai
 matplotlib
-polars
+langchain
+langchain_openai
+langchain_core
+langchain_community

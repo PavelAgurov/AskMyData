@@ -34,7 +34,7 @@ def streamlit_hack_remove_top_space():
     st.markdown("""
         <style>
                .block-container {
-                    padding-top: 1rem;
+                    padding-top: 2rem;
                 }
         </style>
         """, unsafe_allow_html=True)
