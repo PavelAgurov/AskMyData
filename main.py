@@ -18,7 +18,7 @@ from pandasai.helpers.openai_info import get_openai_callback
 from strings import  WHAT_IS_TITANIK_DATA, QUESTION_EXAMPLES
 from utils_streamlit import streamlit_hack_remove_top_space, streanlit_hide_main_menu
 
-MODEL_NAME = "gpt-3.5-turbo" # gpt-3.5-turbo-16k
+MODEL_NAME = "gpt-4o-mini"
 OUTPUT_GPAPH_FOLDER = '.exports_charts$$'
 
 DEBUG_GUID = 'f0bec9d3-1ec3-4bc0-a41e-dca19b9a6c9d'
@@ -57,14 +57,14 @@ def load_data_file(uploaded_file):
         return pd.read_excel(uploaded_file)
     return None
 
-def get_uploaded_data(uploaded_files):
+def get_uploaded_data(uploaded_file_list):
     """Upload data files into DataFrame"""
     file_names = []
-    for uploaded_file in uploaded_files:
+    for uploaded_file in uploaded_file_list:
         file_names.append(uploaded_file.name)
 
     result_data = []
-    for uploaded_file in uploaded_files:
+    for uploaded_file in uploaded_file_list:
         result_data.append(load_data_file(uploaded_file))
 
     return result_data, file_names
@@ -96,10 +96,11 @@ with tab_main:
             submitted_uploaded_files = st.form_submit_button("Upload selected files")
     
     with tab_load_examples:
-        cols_examples = st.columns(3)
+        cols_examples = st.columns(4)
         load_titanik_button = cols_examples[0].button('Load Titanik data')
         load_country_button = cols_examples[1].button('Load Country data')
         load_dow2011_button = cols_examples[2].button('Load Dow Jones index 2011')
+        load_hr_button = cols_examples[3].button('Load HR data')
         st.markdown(WHAT_IS_TITANIK_DATA, unsafe_allow_html=True)
 
     data_headers = st.expander(label="First 5 data rows", expanded=True).empty()
@@ -173,6 +174,12 @@ if load_dow2011_button:
     st.session_state.data = [pd.read_csv('./data_examples/dow_jones_index_2011.csv')]
     st.session_state.data_names = ['Dow Jones index 2011']
     st.session_state.data_example = 'Dow Jones index 2011'
+    st.rerun()
+    
+if load_hr_button:
+    st.session_state.data = [pd.read_csv('./data_examples/hr.csv')]
+    st.session_state.data_names = ['HR Data']
+    st.session_state.data_example = 'HR Data'
     st.rerun()
 
 # upload file
